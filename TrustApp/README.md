@@ -1,4 +1,4 @@
-Running in QSEE 4.0, modify the APIs used in codes for other TEE versions. 
+Running in QSEE 4.0, please modify the APIs used in codes if you are in other TEE environment. 
 
 Those is only part of the TA, parts that realted to our implementation. Some parts that includes QSEE copyrights, like TUI and communication between TEE and Rich OS, can not be shown here.
 

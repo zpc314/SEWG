@@ -1,0 +1,115 @@
+#===============================================================================
+#
+# TZ applib
+#
+# GENERAL DESCRIPTION
+#    build script
+#
+#
+#-------------------------------------------------------------------------------
+#
+#  $Header:  $
+#  $DateTime: $
+#  $Author: $
+#  $Change: $
+#                      EDIT HISTORY FOR FILE
+#
+#  This section contains schedulerents describing changes made to the module.
+#  Notice that changes are listed in reverse chronological order.
+# when         who     what, where, why
+# --------     ---     ---------------------------------------------------------
+# 04/28/16     rp      remove wpsecapp linkage
+# 08/10/15   	 dc      Added eSE Service
+# 06/04/15     el      Added qsee_bulletin_board_shim.c file
+# 02/10/14     cz      Added qsee_cfg_prop_shim.c file
+# 07/16/14     tp      Changed DRM sconscripts to use the prxy_services
+#                      library instead of linking to qsee_services.
+# 01/28/14     sa      Add HDCPSRM_IMAGE
+# 10/17/13     ib      Add SECUREMM
+# 03/11/13     bbs     Add ISDBTMM to TZ common lib
+# 01/15/2013   cz      removed drmprov
+#===============================================================================
+Import('env')
+import copy
+env = env.Clone()
+
+#-------------------------------------------------------------------------------
+# Source PATH
+#-------------------------------------------------------------------------------
+SRCPATH = "${BUILD_ROOT}/core/securemsm/trustzone/qsapps/libs/applib/sccore"
+
+env.VariantDir('${BUILDPATH}', SRCPATH, duplicate=0)
+
+#-------------------------------------------------------------------------------
+# Compiler, object, and linker definitions
+#-------------------------------------------------------------------------------
+
+# do not generate thumb code for inline assembler code
+#env.Append(ARMCC_OPT = ' -marm')
+
+CBSP_API = [
+   'SERVICES',
+   'DAL',
+   'MINK',
+   'MINK_LK',
+]
+
+env.RequirePublicApi(CBSP_API)
+env.RequireRestrictedApi(CBSP_API)
+
+INC_PATH_QSEE_API = ["${INC_ROOT}/core/api/securemsm/trustzone/qsee"]
+env.Append(CPPPATH = INC_PATH_QSEE_API)
+INC_PATH_MINK_API = ["${INC_ROOT}/core/securemsm/trustzone/qsee/mink/app_mgr/inc"]
+env.Append(CPPPATH = INC_PATH_MINK_API)
+INC_PATH_GP_API = ["${INC_ROOT}/core/api/securemsm/trustzone/gp"]
+env.Append(CPPPATH = INC_PATH_GP_API)
+INC_PATH_QSEE_SRC = ["${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/applib/sccore/src"]
+env.Append(CPPPATH = INC_PATH_QSEE_SRC)
+INC_PATH_COMDEF = ["${INC_ROOT}/core/api/services"]
+env.Append(CPPPATH = INC_PATH_COMDEF)
+INC_PATH_SYSCALL = ["${INC_ROOT}/core/securemsm/trustzone/qsee/include"]
+env.Append(CPPPATH = INC_PATH_SYSCALL)
+INC_PATH_CTZLIB = ["${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/applib/common/src",
+                   "${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/services/src",
+                   "${INC_ROOT}/core/api/kernel/libstd/stringl",]
+env.Append(CPPPATH = INC_PATH_CTZLIB)
+INC_PATH_KER = ["${INC_ROOT}/core/api/kernel/libstd"]
+env.Append(CPPPATH = INC_PATH_KER)
+INC_PATH_COMMON_APPLIB = ["${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/applib/common_applib/src"]
+env.Append(CPPPATH = INC_PATH_COMMON_APPLIB)
+INC_PATH_MACC = [
+        "${INC_ROOT}/core/api/securemsm/trustzone/qsee",
+        "${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/services/src",
+        "${INC_ROOT}/core/securemsm/trustzone/qsee/services/keyprov/macchiato/shared/inc",
+]
+env.Append(CPPPATH = INC_PATH_MACC)
+INC_PATH_GP_PO_API = ["${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/applib/common_applib/inc/"]
+env.Append(CPPPATH = INC_PATH_GP_PO_API)
+INC_PATH_GP_SRC = ["${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/applib/gp/src/"]
+env.Append(CPPPATH = INC_PATH_GP_SRC)
+INC_PATH_GP_INC = ["${INC_ROOT}/core/securemsm/trustzone/qsapps/libs/applib/gp/inc/"]
+env.Append(CPPPATH = INC_PATH_GP_INC)
+
+#----------------------------------------------------------------------------
+# TZ Exec Shared Objects
+#----------------------------------------------------------------------------
+LIB_ENTRY_SOURCES = [
+    '${BUILDPATH}/src/char2hex.c',
+    '${BUILDPATH}/src/file.c',
+    '${BUILDPATH}/src/file_helper.c',
+    '${BUILDPATH}/src/int2char.c',
+    '${BUILDPATH}/src/wgtee.c',
+    '${BUILDPATH}/src/demo.c',
+    '${BUILDPATH}/src/curve25519.c'
+]
+
+
+sccore_obj = env.Object(LIB_ENTRY_SOURCES)
+sccore_lib = env.Library('${BUILDPATH}/sccore',sccore_obj)
+
+env.AddLibsToImage('SAMPLEAPP_IMAGE',sccore_lib)
+
+#-------------------------------------------------------------------------------
+# Load sub scripts
+#-------------------------------------------------------------------------------
+env.LoadSoftwareUnits()

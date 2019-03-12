@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+apply from: 'nonnull.gradle'
+
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+final def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+android {
+    buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    compileSdkVersion 28
+    dataBinding.enabled true
+    defaultConfig {
+        applicationId 'com.wireguard.android'
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 443
+        versionName '0.0.20181103'
+        buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
+    }
+    // If the keystore file exists
+    if (keystorePropertiesFile.exists()) {
+        // Initialize a new Properties() object called keystoreProperties.
+        final def keystoreProperties = new Properties()
+
+        // Load your keystore.properties file into the keystoreProperties object.
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+    }
+    buildTypes {
+        release {
+            if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
+            externalNativeBuild {
+                cmake {
+                    arguments "-DANDROID_PACKAGE_NAME=${android.defaultConfig.applicationId}"
+                }
+            }
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            externalNativeBuild {
+                cmake {
+                    arguments "-DANDROID_PACKAGE_NAME=${android.defaultConfig.applicationId}${applicationIdSuffix}"
+                }
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path 'tools/CMakeLists.txt'
+        }
+    }
+}
+
+ext {
+    databindingVersion = '3.1.3'
+    supportLibsVersion = '27.1.1'
+    streamsupportVersion = '1.6.0'
+    jsr305Version = '3.0.2'
+    zxingEmbeddedVersion = '3.6.0'
+    acraVersion = '5.2.0-rc2'
+}
+
+dependencies {
+    implementation "com.android.databinding:library:$databindingVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibsVersion"
+    implementation "com.android.support:cardview-v7:$supportLibsVersion"
+    implementation "com.android.support:design:$supportLibsVersion"
+    implementation "com.android.support:preference-v14:$supportLibsVersion"
+    implementation "com.android.support:support-annotations:$supportLibsVersion"
+    implementation "com.google.code.findbugs:jsr305:$jsr305Version"
+    implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
+    implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
+    implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
+    implementation "ch.acra:acra-http:$acraVersion"
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+}

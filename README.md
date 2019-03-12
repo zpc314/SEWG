@@ -7,7 +7,7 @@ This work is still in progress, don't panic if you encounter any bugs or find it
 Original version of WireGuard. We did some fix to fit the Chinese network environment.
 
 2, com.wireguard.android_tee: 
-The tee version. don't bother to run it on a regualr Android device. It won't do nothing without TA running in TEE.
+The tee version. Don't bother to run it on a unprepared Android device, it won't do nothing without TA running in TEE.
 
 3, gopath:
 Some offline data required while building codes above. 

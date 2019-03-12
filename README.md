@@ -1,7 +1,7 @@
 # SEWG
 Security-enhanced WireGuard for Android
 
-This work is still in progress, don't panic if you encounter any bugs.
+This work is still in progress, don't panic if you encounter any bugs or find it doesn’t work (actually, there are very strict requirements to make it work).
 
 1, com.wireguard.android_443_orign：
 Original version of WireGuard. We did some fix to fit the Chinese network environment.

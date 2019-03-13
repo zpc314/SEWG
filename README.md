@@ -1,4 +1,4 @@
-# SEWG, contact us at [mail](zhangpengcheng@iie.ac.cn)
+# SEWG
 Security-enhanced WireGuard for Android
 
 This work is still in progress, don't panic if you encounter any bugs or find it doesn’t work (actually, there are very strict requirements to make it work).

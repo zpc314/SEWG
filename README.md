@@ -14,3 +14,6 @@ Some offline data required while building codes above.
 
 4, TrustApp:
 Codes in TA.
+
+5，wireguard_kernel:
+The kernel version WireGuard for Android.

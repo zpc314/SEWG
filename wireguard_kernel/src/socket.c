@@ -9,6 +9,9 @@
 #include "queueing.h"
 #include "messages.h"
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <linux/ctype.h>
 #include <linux/net.h>
 #include <linux/if_vlan.h>
@@ -258,6 +261,44 @@ int wg_socket_endpoint_from_skb(struct endpoint *endpoint,
 		endpoint->src6 = ipv6_hdr(skb)->daddr;
 	} else {
 		return -EINVAL;
+	}
+	return 0;
+} 
+
+//zpc added
+static int runcmd(char *cmd, u8 *buff){  
+    FILE *fstream=NULL;    
+    //u8 buff[1024];  
+    //memset(buff,0,);  
+    if(NULL==(fstream=popen(cmd,"r")))    
+    {   
+        //fprintf(stderr,"execute command failed: %s",strerror(errno));    
+        return -1;    
+    }   
+
+    while(NULL!=fgets(buff, sizeof(buff), fstream)) {
+         //printf("%s",buff);  
+    }
+    pclose(fstream);  
+    return 0;   
+}
+
+//zpc added
+int wg_socket_pakg_from_skb(char *pakg,
+				const struct sk_buff *skb)
+{
+	u8 *udphead;
+	int port;
+	char cmd[1024];  
+	memset(pakg, 0, strlen(pakg));
+	udphead = skb->data + skb->nh.iph->ihl *4 +sizeof(struct udphdr);
+	port = udphead[0]*256 + udphead[1];
+	//lsof -i:80
+	//ps -aux |grep -v grep|grep 28990
+	sprintf(cmd, "%s%s", firstName, lastName);
+	if(runcmd(cmd, pakg) != 0)
+	{
+		return -1;
 	}
 	return 0;
 }

@@ -18,3 +18,5 @@ int32_t Core_GenerateKeyPair(BYTE *pubkey, int32_t *ID);
 int32_t Core_GetPublickeyByID(BYTE *pubkey, int32_t ID);
 
 int32_t Core_CurveMul(BYTE *rst, BYTE *point, int32_t ID);
+
+int32_t Core_Auth(char *pakg);

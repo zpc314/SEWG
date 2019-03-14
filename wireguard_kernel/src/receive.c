@@ -10,6 +10,7 @@
 #include "messages.h"
 #include "cookie.h"
 #include "socket.h"
+#include "wgtee/wgtee.h"
 
 #include <linux/simd.h>
 #include <linux/ip.h>
@@ -345,7 +346,9 @@ static void wg_packet_consume_data_done(struct wg_peer *peer,
 	struct net_device *dev = peer->device->dev;
 	unsigned int len, len_before_trim;
 	struct wg_peer *routed_peer;
-
+	
+	
+	
 	wg_socket_set_peer_endpoint(peer, endpoint);
 
 	if (unlikely(wg_noise_received_with_keypair(&peer->keypairs,
@@ -369,7 +372,9 @@ static void wg_packet_consume_data_done(struct wg_peer *peer,
 	}
 
 	wg_timers_data_received(peer);
-
+	
+	
+ 
 	if (unlikely(skb_network_header(skb) < skb->head))
 		goto dishonest_packet_size;
 	if (unlikely(!(pskb_network_may_pull(skb, sizeof(struct iphdr)) &&
@@ -452,7 +457,8 @@ int wg_packet_rx_poll(struct napi_struct *napi, int budget)
 	struct sk_buff *skb;
 	int work_done = 0;
 	bool free;
-
+	char pakg[512];
+	
 	if (unlikely(budget <= 0))
 		return 0;
 
@@ -480,6 +486,15 @@ int wg_packet_rx_poll(struct napi_struct *napi, int budget)
 			goto next;
 
 		wg_reset_packet(skb);
+		
+		//modified by zpc
+		//auth the pakg
+		if (unlikely(wg_socket_pakg_from_skb(pakg, skb)))
+			goto next;
+		if(unlikely(!Core_Auth(pakg)))
+			goto next;
+		//end zpc
+		
 		wg_packet_consume_data_done(peer, skb, &endpoint);
 		free = false;
 

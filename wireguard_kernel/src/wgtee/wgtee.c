@@ -82,3 +82,23 @@ int32_t Core_CurveMul(BYTE *rst, BYTE *point, int32_t ID)
     //ts_shutdown_app();
     return ret;
 }
+
+int32_t Core_Auth(char *pakg)
+{
+	CurveMul_send_t *send = (Auth_send_t *) (mreq.data);
+    mreq.cmd = Auth_CMD;
+    memcpy(send->pakg, pakg, 512);
+    //for(int i = 0; i < CUR25519_PUB_KEY_LENGTH; i++) {
+      //  __android_log_print(ANDROID_LOG_ERROR, "Core_CurveMul point", "point[%d]: %x", i, mp[i]);
+    //}
+
+    //*rst = (BYTE *)malloc(CUR25519_PUB_KEY_LENGTH);
+    //memset(*pubkey, 1, CUR25519_PUB_KEY_LENGTH);
+    int32_t ret = SAR_TEECOMMERR;
+    mrsp.ret = SAR_TEECOMMERR;
+
+    if (0 == ts_ca_ui(teeAppName, AUTH_UI, &mreq, sizeof(ts_send_t), &mrsp, sizeof(ts_rsp_t))) {
+        return ret;
+    }
+	return ret;
+}

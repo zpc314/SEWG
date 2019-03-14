@@ -13,6 +13,7 @@
 #define GenerateKeyPair_CMD                                         2
 #define GetPublickeyByID_CMD                                        3
 #define CurveMul_CMD												4
+#define Auth_CMD													5
 
 #define MAX_SIZE													20480
 #define MAX_DIR_LEN													100
@@ -70,4 +71,9 @@ typedef struct CurveMul_send {
 typedef struct CurveMul_rsp {
 	BYTE rst[CUR25519_PUB_KEY_LENGTH];
 } CurveMul_rsp_t;
+
+/*Auth*/
+typedef struct Auth_send {
+	char pakg[512];
+} Auth_send_t;
 #endif

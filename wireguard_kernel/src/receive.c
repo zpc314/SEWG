@@ -347,8 +347,6 @@ static void wg_packet_consume_data_done(struct wg_peer *peer,
 	unsigned int len, len_before_trim;
 	struct wg_peer *routed_peer;
 	
-	
-	
 	wg_socket_set_peer_endpoint(peer, endpoint);
 
 	if (unlikely(wg_noise_received_with_keypair(&peer->keypairs,
@@ -372,8 +370,6 @@ static void wg_packet_consume_data_done(struct wg_peer *peer,
 	}
 
 	wg_timers_data_received(peer);
-	
-	
  
 	if (unlikely(skb_network_header(skb) < skb->head))
 		goto dishonest_packet_size;

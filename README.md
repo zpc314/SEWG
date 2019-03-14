@@ -1,7 +1,7 @@
 # SEWG
 Security-enhanced WireGuard for Android
 
-This work is still in progress, don't panic if you encounter any bugs or find it doesn’t work (actually, there are very strict requirements to make it work).
+This work is still in progress, don't panic if you encounter any bugs or find it doesn’t work (actually, it's very hard to make it work without everything prepared).
 
 1, com.wireguard.android_443_orign：
 Original version of WireGuard. We did some fix to fit the Chinese network environment.
@@ -14,3 +14,6 @@ Some offline data required while building codes above.
 
 4, TrustApp:
 Codes in TA.
+
+5, wireguard_kernel:
+The kernel version WireGuard for Android.
